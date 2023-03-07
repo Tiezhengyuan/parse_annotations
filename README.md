@@ -6,13 +6,26 @@ The bioinformatics tool pPAnnot could create on-site genome annotations and pars
 pPannot is very flexible because the parsed genome annotation is term-based. A specific genome annotations namely human or mouse could be parsed according to your study. Or, a certain gene-like annotations could be parsed. For example, those term-based annotations could be all prostate cancer related (oncology study), cellulase (microbio-environments study), and so on.
 
 ## 2. Testing and installation
+The tool is developed and tested in Python3
 
 ### 2.1. unit test
 
+```
+pip install -r requirements.txt
+pytest tests/unittests
+```
+
 ### 2.2. local test
+
+```
+pytest tests/localtests
+```
 
 ### 2.3. installation
 
+```
+python setup.py
+```
 
 ## 3. Quick start
 
