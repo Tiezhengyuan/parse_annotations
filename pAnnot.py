@@ -15,7 +15,8 @@ def main(args):
 
     elif args['step'] == 'build':
         if args['term'] is not None and len(args['term']) == 2:
-            cmd = ['python', os.path.join('scripts', 'build.py'),] + args['term']
+            db_name = args['project_name'] if args['project_name'] else '_'.join(args['term'])
+            cmd = ['python', os.path.join('scripts', 'build.py'), db_name] + args['term']
             result = subprocess.run(cmd, capture_output=True, text=True)
             print("stdout:", result.stdout)
             if result.stderr:
@@ -45,6 +46,8 @@ if __name__ == '__main__':
         help ='Steps for parsing annotations. They are download, build, or parse.')
     parser.add_argument('-t', '--term', action = 'store', nargs = 2,
         help = 'Terms used for retrieving annotation data when \"-s build\" is used.')
+    parser.add_argument('-p', '--project_name', action = 'store', 
+        help = 'Assign a name the local database. In default, that is the term.')
     parser.add_argument('-r', '--reference', action = 'store',
         help = 'reference term for paring annotation data when \"-s parse\" is used')
     args = vars(parser.parse_args())

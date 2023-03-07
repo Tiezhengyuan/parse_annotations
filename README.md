@@ -9,8 +9,8 @@ such as ontology enrichment, pathway enrichment, clustering, etc.
 The tool pAnnot is very flexible because the parsed genome annotation is term-based. You migh as well consider
 pAnnot if you face one of those issues as the following:
 - You need some not widely supported genome annotations: For some mode organism namely human, many tools or R packages
-    are available. but it is hard to collect genome annotations for many species though they may be recorded
-    in public database.
+    are available. In that case, you may not need pAnnot. But it is hard to collect genome annotations for many species
+    though they may be recorded in public database.
 - You need Non-geneme annotations: For some microbial or environmental study, tremendous data are not complete genome.
     Or those taxonomy is unknown.
 - I have multiple reference genome annotations. That is possible in biomedical science. For large sequencing project
@@ -52,7 +52,7 @@ Make sure the variables DIR_DOWNLOAD and DIR_CACHE are correctly defined.
         2.build local database 
         3.parse genome annotations
 ### example 1:  
-Build human genome annotations
+Build human genome annotations. The major steps are showed as the below:
 ```
 python pAnnot.py -s download
 python pAnnot.py -s build -t taxonomy 96606
@@ -70,5 +70,5 @@ python pAnnot.py -s parse -t "NCBI Accession Number"
 
 
 ## 4. references
-NCBI FTP: ftp.ncbi.nlm.nih.gov/gene/DATA/
-ExPASy FTP: ftp.expasy.org
+-NCBI FTP: ftp.ncbi.nlm.nih.gov/gene/DATA/
+-ExPASy FTP: ftp.expasy.org

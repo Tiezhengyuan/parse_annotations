@@ -12,23 +12,16 @@ class TestProcessGene(TestCase):
     def setUp(self):
         self.c = ProcessGene()
 
-    @skip
     @mock.patch.dict(os.environ, env)
-    def test_process_taxonomy_entrez(self):
-        self.c.process_taxonomy_entrez('9606')
+    def setUp(self):
+        self.c = ProcessGene()
 
-    @skip
     @mock.patch.dict(os.environ, env)
     def test_parse_taxonomy_gene2(self):
         handle = self.c.parse_taxonomy_gene2('gene2accession', '9606')
         res = next(handle)
         assert '1' in res
 
-
-    @skip
-    @mock.patch.dict(os.environ, env)
-    def test_feed_redis(self):
-        self.c.feed_redis()
 
     @data(
         ['A0A1J0MUK8', 'A0', 'AP_000046.1'],

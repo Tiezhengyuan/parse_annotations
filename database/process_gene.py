@@ -14,28 +14,28 @@ from utils.dir import Dir
 from utils.utils import Utils
 from utils.jtxt import Jtxt
 from utils.handle_json import HandleJson
-from connector.connect_redis import ConnectRedis
-from database.retrieve_pubmed import RetrievePubmed
 
 
 class ProcessGene(Commons):
     db = 'entrez'
     
-    def __init__(self):
+    def __init__(self, project_name:str):
         super(ProcessGene, self).__init__()
+        self.project_name = project_name
         # store local file is downloaded from NCBI FTP
         self.dir_source = os.path.join(self.dir_download, \
             'NCBI', 'gene', 'DATA')
-        self.tmp_dir = os.path.join(self.dir_source, "tmp_gene_refseq_uniprotkb_collab")
+        self.tmp_dir = os.path.join(self.dir_source, \
+            "tmp_gene_refseq_uniprotkb_collab")
         Dir(self.tmp_dir).init_dir()
 
     def process_taxonomy_entrez(self, tax_id:str):
         '''
         process *.gz and store map in cache
         '''
-        outdir = Dir.cascade_dir(self.dir_map, tax_id, self.cascade_num)
+        outdir = os.path.join(self.dir_cache, self.project_name)
         Dir(outdir).init_dir()
-        outfile = os.path.join(outdir, f"{tax_id}_{self.db}.jtxt")
+        outfile = os.path.join(outdir, f"{self.db}.jtxt")
         
         #parse and integrate gene data
         file_names = ['gene2accession', 'gene2refseq', 'gene2pubmed', \
@@ -51,21 +51,6 @@ class ProcessGene(Commons):
         self.format_gene(outfile)
         # parse uniprotkb
         self.parse_uniprotkb(outfile)
-
-    def update_pubmed(self, tax_id:str):
-        outdir = Dir.cascade_dir(self.dir_map, tax_id, self.cascade_num)
-        infile = os.path.join(outdir, f"{tax_id}_{self.db}.jtxt")
-        tmp = os.path.join(outdir, f"{tax_id}_{self.db}.jtxt.tmp")
-        with open(tmp, 'wt') as f:
-            for rec in Jtxt(infile).read_jtxt():
-                print(rec['GeneID'])
-                for item in rec.get("gene2pubmed", []):
-                    # print('###PMID:', item['PubMed_ID'])
-                    r = RetrievePubmed(item)
-                    r.get_outerlink('eutils/elink.fcgi/', item['PubMed_ID'])
-                    # print(item)
-                f.write(f"{json.dumps(rec)}\n")
-       
 
 
     def parse_taxonomy_gene2(self, file_name:str, tax_id:str)->Iterable:
@@ -259,59 +244,3 @@ class ProcessGene(Commons):
         return accessions
 
 
-    def feed_redis(self):
-        '''
-        map NCBI_protein_accession ~ UniProtKB_protein_accession
-        source file: *_gene_refseq_uniprotkb_collab.gz
-        '''
-        rs = ConnectRedis('uniprot_acc')
-        infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-        with File(infile).readonly_handle() as f:
-            # skip the first line
-            _ = next(f)
-            for line in f:
-                ncbi_acc, uniprot_acc = line.rstrip().split('\t')
-                rec = {
-                    'NCBI_protein_accession': [ncbi_acc,],
-                    'UniProtKB_protein_accession': [uniprot_acc,],
-                }
-                rs.put_uniprotkb_acc(uniprot_acc, rec)
-
-
-    # def get_uniprotkb(self)->Iterable:
-    #     '''
-    #     map NCBI_protein_accession ~ UniProtKB_protein_accession
-    #     source file: *_gene_refseq_uniprotkb_collab.gz
-    #     '''
-    #     map = {}
-    #     infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-    #     with File(infile).readonly_handle() as f:
-    #         # skip the first line
-    #         header = next(f)
-    #         # print(header.rstrip().split('\t'))
-    #         for line in f:
-    #             val1, val2 = line.rstrip().split('\t')
-    #             # print(val1, val2)
-    #             Utils.update_dict(map, val2, val1)
-    #             if len(map) >= 1e6:
-    #                 output = deepcopy(map)
-    #                 map = {}
-    #                 yield output
-    #         else:
-    #             if map:
-    #                 yield map
-
-
-    # def search_ncbi_acc(self, acc_pair:dict):
-    #     '''
-    #     map NCBI_protein_accession ~ UniProtKB_protein_accession
-    #     source file: *_gene_refseq_uniprotkb_collab.gz
-    #     '''
-    #     infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-    #     with File(infile).readonly_handle() as f:
-    #         # skip the first line
-    #         _ = next(f)
-    #         for line in f:
-    #             ncbi_acc, uniprot_acc = line.rstrip().split('\t')
-    #             if uniprot_acc in acc_pair:
-    #                 Utils.update_dict(acc_pair, uniprot_acc, ncbi_acc)
