@@ -8,15 +8,15 @@ such as ontology enrichment, pathway enrichment, clustering, etc.
 
 The tool pAnnot is very flexible because the parsed genome annotation is term-based. You migh as well consider
 pAnnot if you face one of those issues as the following:
-    - You need some not widely supported genome annotations: For some mode organism namely human, many tools or R packages
-        are available. but it is hard to collect genome annotations for many species though they may be recorded
-        in public database.
-    - You need Non-geneme annotations: For some microbial or environmental study, tremendous data are not complete genome.
-        Or those taxonomy is unknown.
-    - I have multiple reference genome annotations. That is possible in biomedical science. For large sequencing project
-        on diferent population, different references are needed.
-    - Unpublished genome annotations. New hybrid plants in the plant science, or untaxonomy strains in microbiological studies
-        would generate some genome annotations though such annotations may be computationally determined.
+- You need some not widely supported genome annotations: For some mode organism namely human, many tools or R packages
+    are available. but it is hard to collect genome annotations for many species though they may be recorded
+    in public database.
+- You need Non-geneme annotations: For some microbial or environmental study, tremendous data are not complete genome.
+    Or those taxonomy is unknown.
+- I have multiple reference genome annotations. That is possible in biomedical science. For large sequencing project
+    on diferent population, different references are needed.
+- Unpublished genome annotations. New hybrid plants in the plant science, or untaxonomy strains in microbiological studies
+    would generate some genome annotations though such annotations may be computationally determined.
 
 ## 2. Testing and installation
 The tool is developed and tested in Python3. Minimum hardware: 32GB RAM, 200GB hard drive space.
