@@ -5,6 +5,8 @@ retrieve data according to terms specifiecd and organize them into data in jtxt 
 import sys
 from utils.commons import Commons
 from database.process_gene import ProcessGene
+from database.process_protein import ProcessProtein
+
 
 class App(Commons):
     def __init__(self, project_name:str, field:str, term:str):
@@ -15,8 +17,10 @@ class App(Commons):
 
     def process(self):
         # print(self.project_name, self.field, self.term)
-        if self.field == 'taxonomy':
-            ProcessGene(self.project_name).process_taxonomy_entrez(self.term)
+        # if self.field == 'taxonomy':
+        #     ProcessGene(self.project_name).process_taxonomy_entrez(self.term)
+        
+        ProcessProtein().process_protein()        
 
 
 if __name__ == '__main__':

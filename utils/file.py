@@ -103,3 +103,13 @@ class File:
             for line in f:
                 items = re.split(r'\t*\|\t*', line.rstrip())
                 yield items
+
+    @staticmethod
+    def delete_tmp_files(tmp_files:list):
+        for i in tmp_files:
+            if os.path.isfile(i):
+                try:
+                    print(f"try to delete temporary file {i}")
+                    os.remove(i)
+                except:
+                    pass

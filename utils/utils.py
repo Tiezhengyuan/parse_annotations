@@ -48,6 +48,25 @@ class Utils:
                 curr[keys[-1]] = default_val if \
                     default_val is not None else ''
 
+    @staticmethod
+    def insert_deep_dict(input:dict, keys:list, val):
+        '''
+        arg: val = should be string/integer type
+        key-value: value would be list type
+        '''
+        curr = input
+        for k in keys[:-1]:
+            if k not in curr:
+                curr[k] = {}
+            curr = curr[k]
+        if val not in (None, '', [], {}):
+            if keys[-1] not in curr:
+                curr[keys[-1]] = [val, ]
+            else:
+                if val not in curr[keys[-1]]:
+                    curr[keys[-1]].append(val)
+        else:
+            curr[keys[-1]] = []
 
     @staticmethod
     def update_dict(input:dict, key, val):

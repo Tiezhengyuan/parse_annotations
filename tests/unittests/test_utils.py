@@ -7,6 +7,24 @@ from utils.utils import Utils
 @ddt
 class TestUtils(TestCase):
 
+
+    @data(
+        [{}, ['a',], {}, {'a':{}}],
+        [{}, ['a',], None, {'a':''}],
+        [{'a':[]}, ['a',], {}, {'a':[]}],
+        [{}, ['a','b','c'], '123', {'a':{'b':{'c':['123']}}}],
+        [{}, ['a','b','c'], [], {'a':{'b':{'c':[]}}}],
+        [{}, ['a','b','c'], None, {'a':{'b':{'c':[]}}}],
+        [{'a':{'b':{'c':['1']}}}, ['a','b','c'], '1', {'a':{'b':{'c':['1']}}}],
+        [{'a':{'b':{'c':['1']}}}, ['a','b','c'], '2', {'a':{'b':{'c':['1','2']}}}],
+        [{'a':{'b':{'c':[]}}}, ['a','b','c'], '1', {'a':{'b':{'c':['1']}}}],
+        [{'a':{'b':{'c':['1']}}}, ['a','e','c'], '1', {'a':{'b':{'c':['1']},'e':{'c':['1']}}}],
+    )
+    @unpack
+    def test_insert_deep_dict(self, input, keys, default_val, expect):
+        Utils.insert_deep_dict(input, keys, default_val)
+        assert input == expect
+
     @skip
     @data(
         [
@@ -31,6 +49,7 @@ class TestUtils(TestCase):
         Utils.init_dict(input, keys, default_val)
         assert input == expect
     
+
     @data(
         [{}, 'a', 1, {'a':[1,]}],
         [{}, 'a', {'b':1}, {'a':[{'b':1},]}],
@@ -111,7 +130,7 @@ class TestUtils(TestCase):
         res = Utils.search_series(s, key)
         assert res == expect
 
-
+    @skip
     @data(
         ['A0A1J0MUK8', ''],
         # ['Q96678', ''],

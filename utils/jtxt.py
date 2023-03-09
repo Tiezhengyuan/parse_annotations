@@ -35,7 +35,7 @@ class Jtxt(Commons):
                 records = json.loads(line)
                 yield records
 
-    def save_jtxt(self, input:dict, is_online=False):
+    def save_jtxt(self, input:dict, is_oneline=False):
         '''
         save value of a key-value as one line
         '''
@@ -43,7 +43,7 @@ class Jtxt(Commons):
             return False
         try:
             with open(self.file, 'w') as f:
-                if is_online:
+                if is_oneline is True:
                     f.write(json.dumps(input)+'\n')
                 else:
                     for _,v in input.items():
@@ -64,36 +64,32 @@ class Jtxt(Commons):
         return True
 
    
-    def merge_jtxt(self, index_key:str, input:dict, debugging=False):
+    def merge_jtxt(self, index_key:str, input:dict, outfile:str):
         '''
         in-place replace/merge/insert/add
         for input: the value of a key-value is one line
         '''
         if not isinstance(input, dict):
             return False
-        if not os.path.isfile(self.file):
-            return self.save_jtxt(input)
-        else:
-            tmp = self.file + '.tmp'
-            with open(tmp, 'wt') as f:
-                handle = self.read_jtxt()
-                for origin_dict in handle:
-                    index = origin_dict.get(index_key)
-                    if index and input.get(index):
-                        origin_dict = Utils.merge_dict(origin_dict, input[index])
-                        del input[index]
-                    f.write(json.dumps(origin_dict)+'\n')
-                #append new value
-                if input:
-                    for _,v in input.items():
-                        f.write(json.dumps(v)+'\n')
-            #
-            if debugging is False:
-                if os.path.isfile(self.file):
-                    os.remove(self.file)
-                os.rename(tmp, self.file)
-                print(f"{self.file} is updated by {__name__}.merge_jtxt().")
-            return True
+        with open(outfile, 'wt') as f:
+            handle = self.read_jtxt()
+            for origin in handle:
+                index = origin.get(index_key)
+                if index and input.get(index):
+                    origin = Utils.merge_dict(origin, input[index])
+                    if isinstance(origin[index_key], list) and len(origin[index_key])==1:
+                        origin[index_key] = origin[index_key][0]
+                    del input[index]
+                f.write(json.dumps(origin)+'\n')
+            #append new value
+            if input:
+                for _,v in input.items():
+                    f.write(json.dumps(v)+'\n')
+        try:
+            os.remove(self.file)
+        except Exception as e:
+            print(e)
+        return True
 
         
     def search_jtxt(self, keys:list):
