@@ -149,14 +149,7 @@ class ProcessGene(Commons):
                         acc_pair[pro_acc] = []
 
         # parse acc_pair
-        parse_infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-        with File(parse_infile).readonly_handle() as f:
-            # skip the first line
-            _ = next(f)
-            for line in f:
-                val1, val2 = line.rstrip().split('\t')
-                if val1 in acc_pair and val2 not in acc_pair[val1]:
-                    acc_pair[val1].append(val2)
+        self.parse_ncbi_acc_pair(acc_pair)
         
         #update outfile
         with open(outfile, 'wt') as f:
@@ -180,6 +173,25 @@ class ProcessGene(Commons):
             print(e)
         return outfile
 
+    def parse_ncbi_acc_pair(self, acc_pair:dict):
+        parse_infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
+        with File(parse_infile).readonly_handle() as f:
+            # skip the first line
+            _ = next(f)
+            for line in f:
+                val1, val2 = line.rstrip().split('\t')
+                if val1 in acc_pair and val2 not in acc_pair[val1]:
+                    acc_pair[val1].append(val2)
+
+    def parse_uniprot_acc_pair(self, acc_pair:dict):
+        parse_infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
+        with File(parse_infile).readonly_handle() as f:
+            # skip the first line
+            _ = next(f)
+            for line in f:
+                val1, val2 = line.rstrip().split('\t')
+                if val2 in acc_pair and val1 not in acc_pair[val2]:
+                    acc_pair[val2].append(val1)
 
     def split_gene_refseq_uniprotkb_collab(self):
         '''

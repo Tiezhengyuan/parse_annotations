@@ -17,10 +17,12 @@ class App(Commons):
 
     def process(self):
         # print(self.project_name, self.field, self.term)
-        # if self.field == 'taxonomy':
-        #     ProcessGene(self.project_name).process_taxonomy_entrez(self.term)
-        
-        ProcessProtein().process_protein()        
+
+        if self.field == 'taxonomy':
+            # entrez gene
+            ProcessGene(self.project_name).process_taxonomy_entrez(self.term)
+            # swissprot protein
+            ProcessProtein(self.project_name).process_taxonomy_protein(self.term)
 
 
 if __name__ == '__main__':

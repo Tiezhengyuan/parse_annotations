@@ -40,7 +40,7 @@ class Swissprot(Commons):
                 'organism': record.organism,
                 'organelle': record.organelle,
                 'organism_classification': record.organism_classification,
-                'taxonomy_id': record.taxonomy_id,
+                'tax_id': record.taxonomy_id,
                 'host': self.parse_host(record),
                 'comments': record.comments,
                 'keywords': record.keywords,
