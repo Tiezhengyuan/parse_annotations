@@ -19,25 +19,25 @@ from utils.handle_json import HandleJson
 class ProcessGene(Commons):
     db = 'entrez'
     
-    def __init__(self, project_name:str=None):
+    def __init__(self, dir_db:str):
         super(ProcessGene, self).__init__()
-        self.project_name = project_name if project_name else 'project'
+        # entrez db local data
+        self.dir_db = dir_db
+        self.file_db = os.path.join(self.dir_db, f"{self.db}.jtxt")
+        # source data for parsing
+        self.parse_infile = os.path.join(self.dir_ncbi_gene, "gene_refseq_uniprotkb_collab.gz")
         # store local file is downloaded from NCBI FTP
-        self.dir_source = os.path.join(self.dir_download, 'NCBI', 'gene', 'DATA')
-        self.tmp_dir = os.path.join(self.dir_source, "tmp_gene_refseq_uniprotkb_collab")
+        self.tmp_dir = os.path.join(self.dir_ncbi_gene, "tmp_gene_refseq_uniprotkb_collab")
         Dir(self.tmp_dir).init_dir()
 
     def process_taxonomy_entrez(self, tax_id:str):
         '''
         process *.gz and store map in cache
         '''
-        outdir = os.path.join(self.dir_cache, self.project_name)
-        Dir(outdir).init_dir()
-        outfile = os.path.join(outdir, f"{self.db}.jtxt")
         
         #parse and integrate gene data
         counter = iter(range(1, 500))
-        tmp_infile = outfile + f".{next(counter)}"
+        tmp_infile = self.file_db + f".{next(counter)}"
         file_names = ['gene2accession', 'gene2refseq', 'gene2pubmed', \
             'gene2go', 'gene2ensembl', 'gene_info', 'gene_group', \
             'gene_history', 'gene_neighbors', 'gene_orthologs', ]
@@ -49,20 +49,20 @@ class ProcessGene(Commons):
                 if not os.path.isfile(tmp_infile):
                     Jtxt(tmp_infile).save_jtxt(map, False)
                 else:
-                    tmp_outfile = outfile + f".{next(counter)}"
+                    tmp_outfile = self.file_db + f".{next(counter)}"
                     Jtxt(tmp_infile).merge_jtxt('GeneID', map, tmp_outfile)
                     tmp_infile = tmp_outfile
 
         # decorate some data format
-        tmp_outfile = outfile + f".{next(counter)}"
+        tmp_outfile = self.file_db + f".{next(counter)}"
         print(tmp_infile, tmp_outfile)
         self.format_gene(tmp_infile, tmp_outfile)
         tmp_infile = tmp_outfile
         # parse uniprotkb
-        tmp_outfile = outfile + f".{next(counter)}"
+        tmp_outfile = self.file_db + f".{next(counter)}"
         print(tmp_infile, tmp_outfile)
         tmp_outfile = self.parse_uniprotkb(tmp_infile, tmp_outfile)
-        os.rename(tmp_outfile, outfile)
+        os.rename(tmp_outfile, self.file_db)
         del counter
 
     def parse_taxonomy_gene2(self, file_name:str, tax_id:str)->Iterable:
@@ -74,7 +74,7 @@ class ProcessGene(Commons):
         '''
         map = {}
         # local file is downloaded from NCBI FTP
-        mapfile = os.path.join(self.dir_source, f"{file_name}.gz")
+        mapfile = os.path.join(self.dir_ncbi_gene, f"{file_name}.gz")
         print(f"parse {mapfile}")
         with File(mapfile).readonly_handle() as f:
             # get column names
@@ -174,8 +174,7 @@ class ProcessGene(Commons):
         return outfile
 
     def parse_ncbi_acc_pair(self, acc_pair:dict):
-        parse_infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-        with File(parse_infile).readonly_handle() as f:
+        with File(self.parse_infile).readonly_handle() as f:
             # skip the first line
             _ = next(f)
             for line in f:
@@ -184,8 +183,7 @@ class ProcessGene(Commons):
                     acc_pair[val1].append(val2)
 
     def parse_uniprot_acc_pair(self, acc_pair:dict):
-        parse_infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-        with File(parse_infile).readonly_handle() as f:
+        with File(self.parse_infile).readonly_handle() as f:
             # skip the first line
             _ = next(f)
             for line in f:
@@ -197,8 +195,7 @@ class ProcessGene(Commons):
         '''
         source file: *_gene_refseq_uniprotkb_collab.gz
         '''
-        infile = os.path.join(self.dir_source, "gene_refseq_uniprotkb_collab.gz")
-        handle = File(infile).readonly_handle()
+        handle = File(self.parse_file).readonly_handle()
         header = next(handle)
         map, start = {}, 0
         for line in handle:

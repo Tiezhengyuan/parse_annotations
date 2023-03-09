@@ -20,12 +20,12 @@ from database.process_gene import ProcessGene
 
 
 class ProcessProtein(Commons):
-    
-    def __init__(self,  project_name:str=None):
-        super(ProcessProtein, self).__init__()
-        self.project_name = 'project' if project_name is None else project_name
-        self.expasy_file = os.path.join(self.dir_cache, project_name, 'expasy.tjxt')
+    db = 'expasy'
 
+    def __init__(self,  dir_db:str):
+        super(ProcessProtein, self).__init__()
+        self.dir_db = dir_db
+        self.expasy_file = os.path.join(self.dir_db, f"{self.db}.tjxt")
 
     def process_taxonomy_protein(self, tax_id:str):
         '''
@@ -34,7 +34,7 @@ class ProcessProtein(Commons):
         acc_pair = {}
         # split Uniprot-Sprot.dat
         counter = iter(range(10))
-        tmp_out = os.path.join(self.dir_cache, f"expasy.tmp.{next(counter)}")
+        tmp_out = os.path.join(self.dir_cache, f"{self.db}.tmp.{next(counter)}")
         with open(tmp_out, 'wt') as f:
             handle = Swissprot().parse_protein()
             for rec in handle:

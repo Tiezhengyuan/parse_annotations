@@ -30,20 +30,19 @@ class Check(Commons):
             self.dir_download = dir_download
         if os.path.isdir(self.dir_download):
             # gene data from NCBI
-            this_dir = os.path.join(self.dir_download, 'NCBI', 'gene', 'DATA')
             file_names = ['gene2accession', 'gene2refseq', 'gene2pubmed', \
                 'gene2go', 'gene2ensembl', 'gene_info', 'gene_group', \
                 'gene_history', 'gene_neighbors', 'gene_orthologs', ]
             tag = 1
             for name in file_names:
-                path = os.path.join(this_dir, f"{name}.gz")
+                path = os.path.join(self.dir_ncbi_gene, f"{name}.gz")
                 if not os.path.isfile(path):
-                    print(f"Warning: Cannot detect {name} in {this_dir}.", file=sys.stdout)
+                    print(f"Warning: Cannot detect {name} in {self.dir_ncbi_gene}.", file=sys.stdout)
                     tag = 0
             else:
                 if tag == 1:
                     print(f"GOOD: All source data {file_names} " + \
-                        f"are detected in {this_dir}.", file=sys.stdout)
+                        f"are detected in {self.dir_ncbi_gene}.", file=sys.stdout)
                     return True
         else:
             print(f"Warning: The direcotry {self.dir_download} " + \
@@ -58,18 +57,17 @@ class Check(Commons):
         if dir_download:
             self.dir_download = dir_download
         if os.path.isdir(self.dir_download):
-            this_dir = os.path.join(self.dir_download, 'expasy', 'swiss-prot', 'release')
             file_names = ['uniprot_sprot.dat', 'uniprot_trembl.dat']
             tag = 1
             for name in file_names:
-                path = os.path.join(this_dir, f"{name}.gz")
+                path = os.path.join(self.dir_swissprot, f"{name}.gz")
                 if not os.path.isfile(path):
-                    print(f"Warning: Cannot detect {name} in {this_dir}.", file=sys.stdout)
+                    print(f"Warning: Cannot detect {name} in {self.dir_swissprot}.", file=sys.stdout)
                     tag = 0
             else:
                 if tag == 1:
                     print(f"GOOD: All source data {file_names} " + \
-                        f"are detected in {this_dir}.", file=sys.stdout)
+                        f"are detected in {self.dir_swissprot}.", file=sys.stdout)
                     return True
         else:
             print(f"Warning: The direcotry {self.dir_download} " + \

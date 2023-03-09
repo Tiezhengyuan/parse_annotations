@@ -19,11 +19,9 @@ class Swissprot(Commons):
 
     def __init__(self)->None:
         super(Swissprot, self).__init__()
-        self.dir_local = os.path.join(self.dir_download, 'ExPASy', 'databases', self.db, 'release')
 
     def parse_protein(self)->Iterable:
-        local_file = os.path.join(self.dir_local, 'uniprot_sprot.dat.gz')
-        handle = File(local_file).readonly_handle()
+        handle = File(self.uniprot_sprot_dat).readonly_handle()
         for record in SwissProt.parse(handle):
             rec = {
                 'accessions': [{'UniProtKB_protein_accession':acc} \

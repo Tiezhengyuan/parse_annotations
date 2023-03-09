@@ -10,8 +10,8 @@ class ConnectNCBI(Commons):
     def __init__(self, endpoint:str=None):
         super(ConnectNCBI, self).__init__()
         self.endpoint = 'ftp.ncbi.nlm.nih.gov' if endpoint is None else endpoint
-        self.dir_local = os.path.join(self.dir_download, "NCBI")
-        Dir(self.dir_local).init_dir()
+        # inherit from Commons
+        Dir(self.dir_ncbi).init_dir()
     
     def download_gene_data(self):
         '''
@@ -21,7 +21,7 @@ class ConnectNCBI(Commons):
             ftp_endpoint = self.endpoint,
             ftp_path = 'gene/DATA',
             pattern = '.gz',
-            local_path = self.dir_local
+            local_path = self.dir_ncbi
         )
 
 
