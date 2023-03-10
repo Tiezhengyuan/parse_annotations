@@ -7,68 +7,56 @@ from utils.commons import Commons
 from utils.file import File
 from utils.dir import Dir
 from utils.utils import Utils
-from annotation.map import Map
+from parser.map import Map
 from utils.handle_json import HandleJson
 from utils.jtxt import Jtxt
-from annotation.map_cache import MapCache
+from parser.map_cache import MapCache
 
 class MapGene(Map):
 
-    def __init__(self):
+    def __init__(self, project_name:str):
         super(MapGene, self).__init__()
+        self.dir_project = os.path.join(self.dir_cache, project_name)
+        self.file_entrez = os.path.join(self.dir_project, 'entrez.jtxt')
 
-    def process_taxonomy_map(self, tax_id:str):
-        # db = 'entrez'
-        infile = f"{tax_id}_gene2accession.jtxt"
-        self.get_map(infile, 'Symbol', lambda x: list(set(x)))
-        self.get_map(infile, 'start_position_on_the_genomic_accession')
-
-        infile = f"{tax_id}_gene_info.jtxt"
-        self.get_map(infile, 'GeneID', 'chromosome')
-        self.get_map(infile, 'GeneID', "Full_name_from_nomenclature_authority")
-        self.get_map(infile, 'GeneID', "type_of_gene")
-        self.get_map(infile, 'GeneID', "map_location")
-        self.get_map(infile, 'GeneID', "Ensembl")
-        self.get_map(infile, 'GeneID', "MIM")
-        self.get_map(infile, 'GeneID', "HGNC")
-
-        infile = f"{tax_id}_gene2refseq.jtxt"
-        self.get_map(infile, 'GeneID', "protein_accession.version", lambda x: list(set(x)))
-
-        infile = f"{tax_id}_gene2go.jtxt"
-        self.get_map(infile, 'GeneID', "GO_ID", lambda x: list(set(x)))
-
-        # within record
-        infile = f"{tax_id}_gene2ensembl.jtxt"
-        self.build_taxonomy_map(infile, "Ensembl_gene_identifier", "GeneID")
-        self.build_taxonomy_map(infile, "Ensembl_protein_identifier", "GeneID")
-        self.build_taxonomy_map(infile, "Ensembl_rna_identifier", "GeneID")
-
-        #parse uniprotkb
-        self.map_gene_to_uniprotkb(tax_id)
-
-
-    def map_gene_to_uniprotkb(self, tax_id:str):
+    def map_entrez(self, key1:list):
         '''
-        source: cache\gene_refseq_uniprotkb_collab.jtxt
-            NCBI_protein_accession ~ UniProtKB_protein_accession
-        source: cache\<tax_id>\protein_accession.version_GeneID.json
-            protein_accession.version ~ GeneID
+        example: key1 = ['GeneID',]
         '''
-        map = {}
-        # protein accession ~ geneid
-        proacc_geneid = MapCache(["taxonomy", tax_id, "protein_accession.version", "GeneID"]).get_map()
-        # protein accession ~uniprotkb accession
-        infile = os.path.join(self.dir_cache, 'gene_refseq_uniprotkb_collab.jtxt')
-        handle = Jtxt(infile).read_jtxt()
-        for pro_acc, uniprotkb_acc_list in handle:
-            if pro_acc in proacc_geneid:
-                for geneid in proacc_geneid[pro_acc]:
-                    Utils.update_dict(map, geneid, uniprotkb_acc_list)
-        # save map
-        keys = ['GeneID', 'UniProtKB_protein_accession',]
-        MapCache(keys).save_taxonomy_map(map, tax_id)
-
+        keys2 = [
+            (['GeneID',], None),
+            (["gene2accession", "Symbol"], None),
+            (["gene2accession", "start_position_on_the_genomic_accession"], None),
+            (["gene2accession", "UniProtKB_protein_accession"], None),
+            (["gene_info", "dbXrefs"], None),
+            (["gene_info", "chromosome"], None),
+            (["gene_info", "map_location"], None),
+            (["gene_info", "assembly"], None),
+            (["gene_info", "Full_name_from_nomenclature_authority"], None),
+            (["gene_info", "MIM"], None),
+            (["gene_info", "HGNC"], None),
+            (["gene2ensembl", 'Ensembl_gene_identifier'], None),
+            (["gene2ensembl", 'Ensembl_rna_identifier'], None),
+            (["gene2ensembl", 'Ensembl_protein_identifier'], None),
+            (['gene2refseq', "genomic_nucleotide_accession.version"], None),
+            (['gene2refseq', "protein_accession.version"], 'refseq_protein_id'),
+            (['gene2refseq', "RNA_nucleotide_accession.version"], 'refseq_transcript_id'),
+            (['gene2pubmed', 'PubMed_ID'], None),
+            (['gene2go', 'GO_ID'], None),
+        ]
+        keys2 = [i for i in keys2 if i[0] != key1]
+        for key2, key_name in keys2:
+            map = {}
+            handle = Jtxt(self.file_entrez).read_jtxt()
+            for rec in handle:
+                val1 = Utils.get_deep_value(rec, key1)
+                val2 = Utils.get_deep_value(rec, key2)
+                # print(val1, val2)
+                if val1 and val2:
+                    for k in val1:
+                        Utils.update_dict(map, k, val2)
+            if key_name is None: key_name = key2[-1]
+            MapCache(key1[-1], key_name).save_map(map, self.dir_project)
 
 
 

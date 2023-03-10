@@ -14,7 +14,7 @@ class Commons:
 
         # mdata data
         # format: {<class name>:{<method name>:<local path>}}
-        self.json_cache = os.path.join(self.dir_cache, 'cache_local_path.json')
+        self.json_cache = 'cache_local_path.json'
         self.json_download = os.path.join(self.dir_cache, 'download_local_path.json')
 
         # initialize local path of downloaded data

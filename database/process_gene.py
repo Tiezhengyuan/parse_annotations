@@ -260,3 +260,8 @@ class ProcessGene(Commons):
         return accessions
 
 
+    def get_fields(self):
+        handle = Jtxt(self.file_db).read_jtxt()
+        record = next(handle)
+        self.print_dict(record)
+        del handle

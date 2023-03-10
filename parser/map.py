@@ -8,23 +8,20 @@ from utils.file import File
 from utils.dir import Dir
 from utils.handle_json import HandleJson
 from utils.jtxt import Jtxt
-from annotation.map_cache import MapCache
+from parser.map_cache import MapCache
 
 class Map(Commons):
     def __init__(self):
         super(Map, self).__init__()
 
-    def get_map0(self, file_name:str, key1_name:str, key2:str, func:Callable=None)->tuple:
+    def get_map(self, infile:str, key2:str, func:Callable=None)->dict:
         '''
         gene uid ~ <terms>
         Note: local cache should exist
         '''
         map = {}
-        tax_id = file_name.split('_', 2)[0]
-        tax_dir = Dir.cascade_dir(self.dir_map, tax_id, self.cascade_num)
-        infile = os.path.join(tax_dir, file_name)
         handle = Jtxt(infile).read_jtxt()
-        for uid, terms in handle:
+        for key1, terms in handle:
             # print(uid, terms)
             rec = []
             for term in terms:
@@ -33,18 +30,16 @@ class Map(Commons):
                         rec += term[key2]
                     else:
                         rec.append(term[key2])
-            map[uid] = rec if func is None else func(rec)
-        #save map
-        MapCache([key1_name, key2,]).save_taxonomy_map(map, tax_id)
+            map[key1] = rec if func is None else func(rec)
         return map
 
 
-    def get_intra_map(self, jtxt_file:str, key1:str, key2:str)->dict:
+    def get_intra_map(self, infile:str, key1:str, key2:str)->dict:
         '''
         map key1~key2 within the uid list
         '''
         map = {}
-        handle = Jtxt(jtxt_file).read_jtxt()
+        handle = Jtxt(infile).read_jtxt()
         for _, terms in handle:
             for term in terms:
                 if key1 in term and key2 in term:
@@ -57,17 +52,6 @@ class Map(Commons):
                         Utils.update_dict(map, k, v)
         return map
 
-    def build_taxonomy_map(self, file_name:str, key1:str, key2:str, func:Callable=None):
-        tax_id = file_name.split('_')[0]
-        tax_dir = Dir.cascade_dir(self.dir_map, tax_id, self.cascade_num)
-        jtxt_file = os.path.join(tax_dir, file_name)
-        # parse data and build map
-        map = self.get_intra_map(jtxt_file, key1, key2)
-        if func:
-            func(map)
-        #save map
-        map_file = MapCache([key1, key2,]).save_taxonomy_map(map, tax_id)
-        return map, map_file
     
     def map_term(self, handle:Iterable, key1:list, key2:list):
         '''

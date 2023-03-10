@@ -25,7 +25,7 @@ class ProcessProtein(Commons):
     def __init__(self,  dir_db:str):
         super(ProcessProtein, self).__init__()
         self.dir_db = dir_db
-        self.expasy_file = os.path.join(self.dir_db, f"{self.db}.tjxt")
+        self.file_db = os.path.join(self.dir_db, f"{self.db}.jtxt")
 
     def process_taxonomy_protein(self, tax_id:str):
         '''
@@ -49,7 +49,7 @@ class ProcessProtein(Commons):
         ProcessGene().parse_uniprot_acc_pair(acc_pair)
 
         # parse NCBI protein accession
-        with open(self.expasy_file, 'wt') as f:
+        with open(self.file_db, 'wt') as f:
             handle = Jtxt(tmp_out).read_jtxt()
             for rec in handle:
                 for item in rec.get('accessions', []):
@@ -62,5 +62,11 @@ class ProcessProtein(Commons):
                 f.write(json.dumps(rec)+'\n')
         # delete temporary files
         File.delete_tmp_files([tmp_out,])
+
+    def get_fields(self):
+        handle = Jtxt(self.file_db).read_jtxt()
+        record = next(handle)
+        print(list(record))
+        del handle
 
 

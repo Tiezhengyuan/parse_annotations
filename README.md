@@ -55,8 +55,8 @@ Make sure the variables DIR_DOWNLOAD and DIR_CACHE are correctly defined.
 Build human genome annotations. The major steps are showed as the below:
 ```
 python pAnnot.py -s download
-python pAnnot.py -s build -t taxonomy 96606
-python pAnnot.py -s parse -t "NCBI Accession Number"
+python pAnnot.py -s build -p human -t taxonomy 96606
+python pAnnot.py -s map -p human -t "GeneID"
 ```
 
 ### example 2: 
@@ -64,7 +64,7 @@ Build cellulase-related annotations
 ```
 python pAnnot.py -s download
 python pAnnot.py -s build -t title cellulase
-python pAnnot.py -s parse -t "NCBI Accession Number"
+python pAnnot.py -s map -t "NCBI Accession Number"
 ```
 
 

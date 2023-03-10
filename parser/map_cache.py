@@ -9,32 +9,28 @@ from utils.handle_json import HandleJson
 from utils.jtxt import Jtxt
 
 class MapCache(Commons):
-    def __init__(self, keys:list=None):
+    def __init__(self, key1:str, key2:str):
         super(MapCache, self).__init__()
-        self.keys = keys
+        self.key1 = key1
+        self.key2 = key2
 
     def save_map(self, map:dict, outdir:str=None)->str:
         '''
         save map dictionary to cache directory
         '''
-        if len(self.keys) < 2:
-            return None
         # save map
-        if outdir is None: outdir =  self.dir_cache
-        Dir(outdir).init_dir()
-        outfile = os.path.join(outdir, f"{self.keys[-2]}_{self.keys[-1]}.json")
+        if outdir is None: outdir = self.dir_cache
+        dir_map = os.path.join(outdir, 'map')
+        Dir(dir_map).init_dir()
+        outfile = os.path.join(dir_map, f"{self.key1}_{self.key2}.json")
         HandleJson(outfile).save_json(map)
 
         # update map path stored in self.json_cache
-        local_cache_path = HandleJson(self.json_cache).to_dict()
-        Utils.init_dict(local_cache_path, self.keys, outfile)
-        HandleJson(self.json_cache).save_json(local_cache_path)
-        return outfile   
+        outfile = os.path.join(outdir, self.json_cache)
+        local_cache_path = HandleJson(outfile).to_dict()
+        Utils.init_dict(local_cache_path, [self.key1, self.key2], outfile)
+        HandleJson(outfile).save_json(local_cache_path)
 
-    def save_taxonomy_map(self, map:dict, tax_id:str)->str:
-        self.keys = ['taxonomy', tax_id, ] + self.keys
-        tax_dir = Dir.cascade_dir(self.dir_map, tax_id, self.cascade_num)
-        return self.save_map(map, tax_dir)
 
     def read_map(self)->Iterable:
         '''

@@ -10,7 +10,8 @@ class TestProcessGene(TestCase):
     
     @mock.patch.dict(os.environ, env)
     def setUp(self):
-        self.c = ProcessGene()
+        dir_db = os.path.join(env['DIR_CACHE'], 'human')
+        self.c = ProcessGene(dir_db)
 
     @skip
     @mock.patch.dict(os.environ, env)
@@ -23,3 +24,6 @@ class TestProcessGene(TestCase):
     def test_split_gene_refseq_uniprotkb_collab(self):
         self.c.split_gene_refseq_uniprotkb_collab()
 
+    @mock.patch.dict(os.environ, env)
+    def test_get_fields(self):
+        res = self.c.get_fields()
