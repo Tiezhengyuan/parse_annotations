@@ -21,27 +21,32 @@ pAnnot if you face one of those issues as the following:
 ## 2. Testing and installation
 The tool is developed and tested in Python3. Minimum hardware: 32GB RAM, 200GB hard drive space.
 
-### 2.1. unit test
+### 2.1. development
+
+Verify the environment variables defined in .env in the app directory.
+Make sure the variables DIR_DOWNLOAD and DIR_CACHE are correctly defined.
 
 ```
 pip install -r requirements.txt
+# do unit testing
 pytest tests/unittests
-```
-
-### 2.2. local test
-
-```
+# do local testing
 pytest tests/localtests
 ```
 
-### 2.3. installation
+In windows, 
+```
+set PYTHONPATH=%PYTHONPATH%;F:\parse_annotations
+```
+
+### 2.2. installation
 
 
 ```
-python setup.py
+git clone git@github.com:Tiezhengyuan/parse_annotations.git
+cd parse_annotations
+pip install .
 ```
-Verify the environment variables defined in .env in the app directory.
-Make sure the variables DIR_DOWNLOAD and DIR_CACHE are correctly defined.
 
 
 ## 3. Quick start

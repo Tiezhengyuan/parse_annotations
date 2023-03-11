@@ -2,19 +2,18 @@
 Test class 
 '''
 from tests.helper import *
-from database.swissprot import Swissprot
+from pAnnot.database.swissprot import Swissprot
 
 
 @ddt
 class TestSwissProt(TestCase):
-
+    
     @mock.patch.dict(os.environ, env)
-    def setUp(self):
-        self.c = Swissprot()
-
-    @skip
     def test_parse_protein(self):
-        handle = self.c.parse_protein()
+        infile = os.path.join(DIR_DATA, 'uniprot_sprot.dat')
+        c = Swissprot()
+        setattr(c, 'uniprot_sprot.dat', infile)
+        handle = c.parse_protein()
         res = next(handle)
         assert 'accessions' in res
 

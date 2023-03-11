@@ -2,7 +2,7 @@
 Test class 
 '''
 from tests.helper import *
-from utils.dir import Dir
+from pAnnot.utils.dir import Dir
 
 @ddt
 class TestDir(TestCase):

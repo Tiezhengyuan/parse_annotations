@@ -13,3 +13,5 @@ class TestENV(TestCase):
     @mock.patch.dict(os.environ, env)
     def test_env(self):
         print(os.getenv('DIR_DOWNLOAD'))
+        print(os.getenv('DIR_CACHE'))
+        print(DIR_DATA)

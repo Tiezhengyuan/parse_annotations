@@ -2,7 +2,7 @@
 Test class 
 '''
 from tests.helper import *
-from utils.jtxt import Jtxt
+from pAnnot.utils.jtxt import Jtxt
 
 
 @ddt
@@ -20,7 +20,6 @@ class TestJtxt(TestCase):
         if os.path.isfile(self.jtxt_file):
             os.remove(self.jtxt_file)
 
-    # @skip
     @data(
         [{}, [{}]],
         [
@@ -76,25 +75,30 @@ class TestJtxt(TestCase):
         assert len(list(handle)) == 3
 
     def test_merge_jtxt(self):
+        outfile = self.jtxt_file + '.tmp'
         #empty file
-        self.c.merge_jtxt('id', {1:{'id':1,'name':'a'}})
+        self.c.merge_jtxt('id', {1:{'id':1,'name':'a'}}, outfile)
+        os.rename(outfile, self.jtxt_file)
         res = self.read_file()
         assert res == [{'id': 1, 'name': 'a'}]
 
         #merge record
-        self.c.merge_jtxt('id', {1:{'id':1,'age':4}})
+        self.c.merge_jtxt('id', {1:{'id':1,'age':4}}, outfile)
+        os.rename(outfile, self.jtxt_file)
         res = self.read_file()
         assert res == [{'id': 1, 'name': 'a', 'age': 4}]
 
         # update record
-        self.c.merge_jtxt('id', {1:{'id':1,'age':5}})
+        self.c.merge_jtxt('id', {1:{'id':1,'age':5}}, outfile)
+        os.rename(outfile, self.jtxt_file)
         res = self.read_file()
-        assert res == [{'id': 1, 'name': 'a', 'age': 5}]
+        assert res == [{'id': 1, 'name': 'a', 'age': [4, 5]}]
 
         #add record
-        self.c.merge_jtxt('id', {2:{'id':2,'name':'b'}})
+        self.c.merge_jtxt('id', {2:{'id':2,'name':'b'}}, outfile)
+        os.rename(outfile, self.jtxt_file)
         res = self.read_file()
-        assert res == [{'id': 1, 'name': 'a', 'age': 5}, {'id': 2, 'name': 'b'}]
+        assert res == [{'id': 1, 'name': 'a', 'age': [4, 5]}, {'id': 2, 'name': 'b'}]
     
 
     def read_file(self):

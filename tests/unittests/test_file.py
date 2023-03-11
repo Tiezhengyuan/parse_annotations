@@ -2,7 +2,7 @@
 Test class 
 '''
 from tests.helper import *
-from utils.file import File
+from pAnnot.utils.file import File
 
 
 @ddt

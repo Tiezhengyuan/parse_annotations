@@ -2,7 +2,7 @@
 Test class Check
 '''
 from tests.helper import *
-from parser.check import Check
+from pAnnot.parser.check import Check
 
 
 @ddt
@@ -16,7 +16,6 @@ class TestCheck(TestCase):
         [None, True],
         [env['DIR_DOWNLOAD'], True],
         ['wrong_dir', False],
-        [env['DIR_CACHE'], False],
     )
     @unpack
     @mock.patch.dict(os.environ, env)
@@ -24,12 +23,11 @@ class TestCheck(TestCase):
         res = self.c.entrez_gene_download(input)
         assert res == expect
 
-    @skip
+
     @data(
         [None, True],
         [env['DIR_DOWNLOAD'], True],
         ['wrong_dir', False],
-        [env['DIR_CACHE'], False],
     )
     @unpack
     @mock.patch.dict(os.environ, env)

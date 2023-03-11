@@ -2,15 +2,15 @@
 Test class Utils
 '''
 from tests.helper import *
-from utils.utils import Utils
+from pAnnot.utils.utils import Utils
 
 @ddt
 class TestUtils(TestCase):
 
 
     @data(
-        [{}, ['a',], {}, {'a':{}}],
-        [{}, ['a',], None, {'a':''}],
+        [{}, ['a',], {}, {'a':[]}],
+        [{}, ['a',], None, {'a':[]}],
         [{'a':[]}, ['a',], {}, {'a':[]}],
         [{}, ['a','b','c'], '123', {'a':{'b':{'c':['123']}}}],
         [{}, ['a','b','c'], [], {'a':{'b':{'c':[]}}}],
@@ -24,19 +24,6 @@ class TestUtils(TestCase):
     def test_insert_deep_dict(self, input, keys, default_val, expect):
         Utils.insert_deep_dict(input, keys, default_val)
         assert input == expect
-
-    @skip
-    @data(
-        [
-            ['chrY', 'chr8', 'chrX', 'chr2', 'chr1', 'chr10'],
-            ['chr1', 'chr2', 'chr8', 'chr10', 'chrX', 'chrY'],
-        ],
-    )
-    @unpack
-    def test_sort_array(self, input, expect):
-        res = Utils.sort_array(input)
-        assert res == expect
-
 
     @data(
         [{}, ['a',], {}, {'a':{}}],

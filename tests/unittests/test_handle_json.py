@@ -3,7 +3,7 @@ Test class
 '''
 from tests.helper import *
 
-from utils.handle_json import HandleJson
+from pAnnot.utils.handle_json import HandleJson
 
 
 infile = os.path.join(DIR_DATA, 'example.json')
@@ -14,9 +14,7 @@ class TestHandleJson(TestCase):
 
     def setUp(self):
         with open(infile, 'w') as f:
-            data = {
-                'a':1,
-            }
+            data = {'a':1,}
             json.dump(data, f, indent=4, sort_keys=True)
 
     @data(

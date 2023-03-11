@@ -2,7 +2,7 @@
 Test class DetectMap
 '''
 from tests.helper import *
-from parser.detect_map import DetectMap
+from pAnnot.parser.detect_map import DetectMap
 
 @ddt
 class TestUtils(TestCase):
@@ -12,7 +12,7 @@ class TestUtils(TestCase):
         self.c = DetectMap()
 
     @mock.patch.dict(os.environ, env)
-    @mock.patch('utils.jtxt.Jtxt.read_jtxt')
+    @mock.patch('pAnnot.utils.jtxt.Jtxt.read_jtxt')
     def test_detect_map(self, mock_jtxt):
         mock_jtxt.return_value = iter([
             {

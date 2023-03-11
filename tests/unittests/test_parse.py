@@ -2,11 +2,12 @@
 Test class ProcessGene
 '''
 from tests.helper import *
-from parser.parse import Parse
+from pAnnot.parser.parse import Parse
 
 
 @ddt
 class TestParse(TestCase):
+
     @mock.patch.dict(os.environ, env)
     def setUp(self):
         self.df = pd.DataFrame({
@@ -16,7 +17,7 @@ class TestParse(TestCase):
         })
 
     @mock.patch.dict(os.environ, env)
-    @mock.patch('parser.map_cache.MapCache.get_map')
+    @mock.patch('pAnnot.parser.map_cache.MapCache.get_map')
     @data(
         ['-','acc', 'id', ['ab', 'c', '', '', 'a|b', ''] ],
     )
@@ -38,7 +39,7 @@ class TestParse(TestCase):
 
     @mock.patch.dict(os.environ, env)
     @mock.patch('os.listdir')
-    @mock.patch('utils.handle_json.HandleJson.read_json')
+    @mock.patch('pAnnot.utils.handle_json.HandleJson.read_json')
     @data(
         [{'a':{'b':'4'}}, 'human', {'a':{'b':'4'}}],
         # no map data
