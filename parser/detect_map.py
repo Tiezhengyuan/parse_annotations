@@ -10,17 +10,43 @@ from utils.handle_json import HandleJson
 from utils.jtxt import Jtxt
 from parser.map_cache import MapCache
 
-class Map(Commons):
-    def __init__(self):
-        super(Map, self).__init__()
+class DetectMap(Commons):
+    def __init__(self, infile:str=None):
+        super(DetectMap, self).__init__()
+        self.infile = infile
 
-    def get_map(self, infile:str, key2:str, func:Callable=None)->dict:
+    def get_fields(self):
+        handle = Jtxt(self.infile).read_jtxt()
+        rec = next(handle)
+        pool = [[i,] for i in list(rec)]
+        paths = []
+        while pool:
+            keys = pool.pop(0)
+            val = Utils.get_deep_value(rec, keys)
+            if isinstance(val, dict):
+                for k in val:
+                    pool.append(keys + [k,])
+            elif isinstance(val, list) and len(val) > 0:
+                if isinstance(val[0], dict):
+                    for k in val[0]:
+                        pool.append(keys + [k,])
+                else:
+                    if set(keys) not in paths:
+                        paths.append(set(keys))
+            else:
+                if set(keys) not in paths:
+                    paths.append(set(keys))
+        del handle
+        fields = list(set([list(i)[-1] for i in paths]))
+        return paths, fields
+
+    def get_map(self, key2:str, func:Callable=None)->dict:
         '''
         gene uid ~ <terms>
         Note: local cache should exist
         '''
         map = {}
-        handle = Jtxt(infile).read_jtxt()
+        handle = Jtxt(self.infile).read_jtxt()
         for key1, terms in handle:
             # print(uid, terms)
             rec = []
@@ -34,12 +60,12 @@ class Map(Commons):
         return map
 
 
-    def get_intra_map(self, infile:str, key1:str, key2:str)->dict:
+    def get_intra_map(self, key1:str, key2:str)->dict:
         '''
         map key1~key2 within the uid list
         '''
         map = {}
-        handle = Jtxt(infile).read_jtxt()
+        handle = Jtxt(self.infile).read_jtxt()
         for _, terms in handle:
             for term in terms:
                 if key1 in term and key2 in term:

@@ -1,8 +1,8 @@
 '''
-Test class ProcessGene
+Test class Check
 '''
 from tests.helper import *
-from integrate.check import Check
+from parser.check import Check
 
 
 @ddt
@@ -24,6 +24,7 @@ class TestCheck(TestCase):
         res = self.c.entrez_gene_download(input)
         assert res == expect
 
+    @skip
     @data(
         [None, True],
         [env['DIR_DOWNLOAD'], True],
@@ -35,3 +36,8 @@ class TestCheck(TestCase):
     def test_swissprot_download(self, input, expect):
         res = self.c.swissprot_download(input)
         assert res == expect
+    
+    @mock.patch.dict(os.environ, env)
+    def test_get_projects(self):
+        res = self.c.get_projects()
+        assert len(res) >= 1

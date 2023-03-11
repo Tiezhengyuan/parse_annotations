@@ -93,3 +93,5 @@ class Check(Commons):
             print(f"Warning: The direcotry {dir_project} does not exist.")
         return False
 
+    def get_projects(self)->list:
+        return os.listdir(self.dir_cache)

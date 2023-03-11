@@ -56,8 +56,14 @@ Build human genome annotations. The major steps are showed as the below:
 ```
 python pAnnot.py -s download
 python pAnnot.py -s build -p human -t taxonomy 96606
-python pAnnot.py -s map -p human -t "GeneID"
+python pAnnot.py -s map -p human -t GeneID
+python pAnnot.py -s map -p human -t TranscriptID
+python pAnnot.py -s map -p human -t UniProtKB
 ```
+
+For Entrez Gene data, there are ~34 terms give a gene.
+For UniProtKB, there are ~64 terms give a protein. In default, 
+some 20-30 terms are selected for mapping. it is ok to include more terms with your needs.
 
 ### example 2: 
 Build cellulase-related annotations

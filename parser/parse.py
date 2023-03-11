@@ -15,9 +15,6 @@ from utils.dir import Dir
 from utils.utils import Utils
 from utils.jtxt import Jtxt
 from utils.handle_json import HandleJson
-from parser.map import Map
-from parser.map_gene import MapGene
-from parser.map_protein import MapProtein
 from parser.map_cache import MapCache
 
 # print(f"{}.", file=sys.stdout)
@@ -25,25 +22,42 @@ class Parse(Commons):
     def __init__(self, df:pd.DataFrame):
         super(Parse, self).__init__()
         self.df = df
-        self.key1, self.key2 = None, None
+        self.map_path, self.column_name, self.key1, \
+            self.key2 = {}, None, None, None
 
 
-    def search_term(self, term:str):
-        pass
+    def declare_project(self, project_name:str):
+        '''
+        step1
+        '''
+        projects = os.listdir(self.dir_cache)
+        if project_name in projects:
+            self.project_name = project_name
+            infile = os.path.join(self.dir_cache, self.project_name, self.json_cache)
+            map_path = HandleJson(infile).read_json()
+            if map_path:
+                self.map_path = map_path
+            else:
+                print(f"Error: no map data showed as the file {infile}")    
+        else:
+            print(f"Error: project_name should be selected from {projects}")
 
-
-    def specify_gene_identifier(self, key1:str):
-        pool = ['NCBI Gene ID', 'NCBI RefSeq Genomic DNA accession', 'Ensembl Gene Identifier',]
-        if key1 not in pool:
-            print(f"Error: Please select one from {pool}.")
-        self.key1 = key1
-        print(f"OK! {key1} is specified. The next, specify a " + 
-                "parsing term using the method parse_term()...")
-
-    def specify_term(self, key2:str):
+    def parse_column(self, column_name:str, key1:str):
+        '''
+        step2
+        '''
+        if self.map_path:
+            if key1 in list(self.map_path) and column_name in self.df.columns:
+                self.key1 = key1
+                self.column_name = column_name
+                print(f"OK! The column {column_name} is parsed with {self.key1}")
+            else:
+                print(f"Error: parsing key name should be selected from {list(self.map_path)}")
+  
+    def parse_term(self, key2:str):
         if self.key1 is None:
             print(f"Please run the method specify_gene_identifer(<gene identifier>) firstly.")
-        res = self.search_term(key2)
+        res = self.map_path[self.key1].get(key2)
         if len(res) == 1:
             self.key2 = key2
             print(f"OK! {key2} is specified. The next,  parse terms using the method parse()...")
@@ -54,9 +68,23 @@ class Parse(Commons):
             print(f"Error: Mutliple terms are detected. {res}")
             print(f"You might as well specify one of them.")
     
-    def parse_term(self):
+    def add_parsing(self):
+        def _func(x, map):
+            if x in map:
+                if isinstance(map[x], list):
+                    if len(map[x])==1:
+                        return map[x][0]
+                    return '|'.join(map[x])
+                return map[x]
+            return ''
         if self.key1 and self.key2:
-            map_df = MapCache().get_map(self.key1, self.key2)
+            map = MapCache(self.key1, self.key2).get_map()
+            self.df[self.key2] = self.df[self.column_name].apply(
+                lambda x: _func(x, map))
+
     
 
     
+    def search_term(self, term:str):
+        pass
+
