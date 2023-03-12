@@ -30,11 +30,18 @@ class ProcessGene(Commons):
         self.tmp_dir = os.path.join(self.dir_ncbi_gene, "tmp_gene_refseq_uniprotkb_collab")
         Dir(self.tmp_dir).init_dir()
 
+
     def process_taxonomy_entrez(self, tax_id:str):
+        self.process_entrez(
+            filter_func = self.parse_taxonomy_gene2,
+            tax_id = tax_id
+        )
+
+
+    def process_entrez(self, filter_func:Callable, **kwargs):
         '''
         process *.gz and store map in cache
         '''
-        
         #parse and integrate gene data
         counter = iter(range(1, 500))
         tmp_infile = self.file_db + f".{next(counter)}"
@@ -43,7 +50,7 @@ class ProcessGene(Commons):
             'gene_history', 'gene_neighbors', 'gene_orthologs', ]
         for file_name in file_names:
             # print(file_name)
-            map_iter = self.parse_taxonomy_gene2(file_name, tax_id)
+            map_iter = filter_func(file_name, **kwargs)
             # save map to cache
             for map in map_iter:
                 if not os.path.isfile(tmp_infile):
@@ -63,13 +70,14 @@ class ProcessGene(Commons):
         os.rename(tmp_outfile, self.file_db)
         del counter
 
-    def parse_taxonomy_gene2(self, file_name:str, tax_id:str)->Iterable:
+    def parse_taxonomy_gene2(self, file_name:str, **kwargs)->Iterable:
         '''
         Gieven a taxonomy
         Map Entrez Gene identifiers(uid) to some identifiers 
         Note: local file should exist
         source file is downloaded from FTP
         '''
+        tax_id = kwargs['tax_id']
         map = {}
         # local file is downloaded from NCBI FTP
         mapfile = os.path.join(self.dir_ncbi_gene, f"{file_name}.gz")
@@ -79,6 +87,7 @@ class ProcessGene(Commons):
             header = next(f).rstrip()
             if header.startswith('#'): header = header[1:]
             col_names = header.split('\t')
+            print(col_names)
             for line in f:
                 items = line.rstrip().split('\t')
                 this_tax_id, geneid = items[0], items[1]

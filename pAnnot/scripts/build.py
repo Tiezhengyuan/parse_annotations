@@ -4,11 +4,11 @@ retrieve data according to terms specifiecd and organize them into data in jtxt 
 """
 import os
 import sys
-from utils.dir import Dir
-from utils.commons import Commons
-from database.process_gene import ProcessGene
-from database.process_protein import ProcessProtein
-from parser.check import Check
+from pAnnot.utils.dir import Dir
+from pAnnot.utils.commons import Commons
+from pAnnot.database.process_gene import ProcessGene
+from pAnnot.database.process_protein import ProcessProtein
+from pAnnot.parser.check import Check
 
 class App(Commons):
     def __init__(self, project_name:str, field:str, term:str):
@@ -35,7 +35,7 @@ class App(Commons):
             # entrez gene
             ProcessGene(dir_db).process_taxonomy_entrez(self.term)
             # swissprot protein
-            ProcessProtein(dir_db).process_taxonomy_protein(self.term)
+            # ProcessProtein(dir_db).process_taxonomy_protein(self.term)
 
 
 if __name__ == '__main__':

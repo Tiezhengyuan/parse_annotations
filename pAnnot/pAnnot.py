@@ -7,7 +7,7 @@ import sys
 def main(args):
     # print(args)
     if args['step'] == 'download':
-        cmd = ['python', os.path.join('scripts', 'download.py')]
+        cmd = ['python', os.path.join('pAnnot', 'scripts', 'download.py')]
         result = subprocess.run(cmd, capture_output=True, text=True)
         print("stdout:", result.stdout)
         if result.stderr:
@@ -16,7 +16,8 @@ def main(args):
     elif args['step'] == 'build':
         if args['term'] is not None and len(args['term']) == 2:
             db_name = args['project_name'] if args['project_name'] else '_'.join(args['term'])
-            cmd = ['python', os.path.join('scripts', 'build.py'), db_name] + args['term']
+            cmd = ['python', os.path.join('pAnnot', 'scripts', 'build.py'), \
+                   db_name] + args['term']
             result = subprocess.run(cmd, capture_output=True, text=True)
             print("stdout:", result.stdout)
             if result.stderr:
@@ -27,7 +28,7 @@ def main(args):
 
     elif args['step'] == 'map':
         if args['reference'] is not None and args['project_name'] is not None:
-            cmd = ['python', os.path.join('scripts', 'map.py'), \
+            cmd = ['python', os.path.join('pAnnot', 'scripts', 'map.py'), \
                 args['project_name'], args['reference']]
             result = subprocess.run(cmd, capture_output=True, text=True)
             print("stdout:", result.stdout)

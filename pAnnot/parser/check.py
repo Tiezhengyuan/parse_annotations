@@ -56,7 +56,7 @@ class Check(Commons):
         if dir_download:
             self.dir_download = dir_download
         if os.path.isdir(self.dir_download):
-            file_names = ['uniprot_sprot.dat', 'uniprot_trembl.dat']
+            file_names = ['uniprot_sprot.dat',]
             tag = 1
             for name in file_names:
                 path = os.path.join(self.dir_swissprot, f"{name}.gz")

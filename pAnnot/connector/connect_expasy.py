@@ -20,6 +20,6 @@ class ConnectExPASy(Commons):
         ConnectFTP2.download_files(
             ftp_endpoint = self.endpoint,
             ftp_path = '/databases/swiss-prot/release',
-            pattern = '.dat.gz',
+            pattern = 'sprot.dat.gz',
             local_path = self.dir_expasy
         )

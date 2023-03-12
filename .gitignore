@@ -2,6 +2,7 @@ cache
 download
 */__pycache__
 tests/*/__pycache__
-build
+build/
 .pytest_cache
-pAnnot.egg-info
+pAnnot.egg-info/
+__pycache__/

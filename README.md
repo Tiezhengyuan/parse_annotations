@@ -49,8 +49,7 @@ pip install .
 ```
 
 
-## 3. Quick start
-
+## 3. Quick start for pAnnot applications
 
 ### steps:
         1.download source data from NCBI and ExPASy
@@ -143,5 +142,5 @@ python pAnnot.py -s map -t "NCBI Accession Number"
 
 
 ## 4. references
--NCBI FTP: ftp.ncbi.nlm.nih.gov/gene/DATA/
--ExPASy FTP: ftp.expasy.org
+- NCBI FTP: ftp.ncbi.nlm.nih.gov/gene/DATA/
+- ExPASy FTP: ftp.expasy.org

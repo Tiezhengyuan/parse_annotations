@@ -2,9 +2,9 @@
 """
 Download source from NCBI and ExPASy
 """
-from connector.connect_ncbi import ConnectNCBI
-from connector.connect_expasy import ConnectExPASy
-from utils.commons import Commons
+from pAnnot.connector.connect_ncbi import ConnectNCBI
+from pAnnot.connector.connect_expasy import ConnectExPASy
+from pAnnot.utils.commons import Commons
 
 class App(Commons):
     def __init__(self):
