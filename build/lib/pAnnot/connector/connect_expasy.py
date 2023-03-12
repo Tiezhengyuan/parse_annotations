@@ -2,9 +2,9 @@
 FTP of ExPASy: ftp.expasy.org
 """
 import os
-from connector.connect_ftp2 import ConnectFTP2
-from utils.commons import Commons
-from utils.dir import Dir
+from pAnnot.connector.connect_ftp2 import ConnectFTP2
+from pAnnot.utils.commons import Commons
+from pAnnot.utils.dir import Dir
 
 class ConnectExPASy(Commons):
 

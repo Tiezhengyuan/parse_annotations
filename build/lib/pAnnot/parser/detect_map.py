@@ -2,13 +2,13 @@
 from typing import Iterable, Callable
 import os
 import json
-from utils.commons import Commons
-from utils.utils import Utils
-from utils.file import File
-from utils.dir import Dir
-from utils.handle_json import HandleJson
-from utils.jtxt import Jtxt
-from parser.map_cache import MapCache
+from pAnnot.utils.commons import Commons
+from pAnnot.utils.utils import Utils
+from pAnnot.utils.file import File
+from pAnnot.utils.dir import Dir
+from pAnnot.utils.handle_json import HandleJson
+from pAnnot.utils.jtxt import Jtxt
+from pAnnot.parser.map_cache import MapCache
 
 class DetectMap(Commons):
     def __init__(self, infile:str=None):

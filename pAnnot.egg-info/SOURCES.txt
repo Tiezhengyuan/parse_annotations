@@ -15,8 +15,6 @@ pAnnot/database/expasy.py
 pAnnot/database/ncbi_entrez.py
 pAnnot/database/process_gene.py
 pAnnot/database/process_protein.py
-pAnnot/database/process_pubmed.py
-pAnnot/database/retrieve_pubmed.py
 pAnnot/database/swissprot.py
 pAnnot/parser/__init__.py
 pAnnot/parser/check.py

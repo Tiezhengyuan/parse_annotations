@@ -3,7 +3,7 @@ Test class
 '''
 from tests.helper import *
 
-from connector.connect_ftp2 import ConnectFTP2 as cf
+from pAnnot.connector.connect_ftp2 import ConnectFTP2 as cf
 
 @ddt
 class Test_(TestCase):

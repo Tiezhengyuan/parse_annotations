@@ -4,8 +4,8 @@ Note: file size of JSON might be <200MB
 from typing import Iterable
 import json
 import os
-from utils.commons import Commons
-from utils.utils import Utils
+from pAnnot.utils.commons import Commons
+from pAnnot.utils.utils import Utils
 
 class HandleJson(Commons):
     def __init__(self, infile:str=None):

@@ -9,14 +9,14 @@ import shutil
 from typing import Iterable, Callable
 import pandas as pd
 
-from utils.commons import Commons
-from utils.file import File
-from utils.dir import Dir
-from utils.utils import Utils
-from utils.jtxt import Jtxt
-from utils.handle_json import HandleJson
-from database.swissprot import Swissprot
-from database.process_gene import ProcessGene
+from pAnnot.utils.commons import Commons
+from pAnnot.utils.file import File
+from pAnnot.utils.dir import Dir
+from pAnnot.utils.utils import Utils
+from pAnnot.utils.jtxt import Jtxt
+from pAnnot.utils.handle_json import HandleJson
+from pAnnot.database.swissprot import Swissprot
+from pAnnot.database.process_gene import ProcessGene
 
 
 class ProcessProtein(Commons):

@@ -9,13 +9,13 @@ import json
 from typing import Iterable, Callable
 import pandas as pd
 
-from utils.commons import Commons
-from utils.file import File
-from utils.dir import Dir
-from utils.utils import Utils
-from utils.jtxt import Jtxt
-from utils.handle_json import HandleJson
-from parser.map_cache import MapCache
+from pAnnot.utils.commons import Commons
+from pAnnot.utils.file import File
+from pAnnot.utils.dir import Dir
+from pAnnot.utils.utils import Utils
+from pAnnot.utils.jtxt import Jtxt
+from pAnnot.utils.handle_json import HandleJson
+from pAnnot.parser.map_cache import MapCache
 
 # print(f"{}.", file=sys.stdout)
 class Parse(Commons):
@@ -25,7 +25,6 @@ class Parse(Commons):
         self.map_path, self.column_name, self.key1, \
             self.key2 = {}, None, None, None
 
-
     def declare_project(self, project_name:str):
         '''
         step1
@@ -34,7 +33,7 @@ class Parse(Commons):
         if project_name in projects:
             self.project_name = project_name
             infile = os.path.join(self.dir_cache, self.project_name, self.json_cache)
-            map_path = HandleJson(infile).read_json()
+            map_path = HandleJson(infile).to_dict()
             if map_path:
                 self.map_path = map_path
             else:

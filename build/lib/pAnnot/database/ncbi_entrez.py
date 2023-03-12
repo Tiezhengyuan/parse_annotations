@@ -9,9 +9,7 @@ from Bio import Entrez
 # Entrez.api_key = "MyAPIkey"
 Entrez.email = "tiezhengyuan@hotmail.com"
 
-from connector.http import HTTP
-from utils.threading import Threading
-from utils.commons import Commons
+from pAnnot.utils.commons import Commons
 
 
 class NCBIEntrez(Commons):

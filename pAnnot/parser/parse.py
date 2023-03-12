@@ -22,9 +22,9 @@ class Parse(Commons):
     def __init__(self, df:pd.DataFrame):
         super(Parse, self).__init__()
         self.df = df
-        self.map_path, self.column_name, self.key1, \
-            self.key2 = {}, None, None, None
-
+        self.map_path = {}
+        self.project_name, self.column_name, self.key1, \
+            self.key2 = None, None, None, None
 
     def declare_project(self, project_name:str):
         '''
@@ -34,7 +34,7 @@ class Parse(Commons):
         if project_name in projects:
             self.project_name = project_name
             infile = os.path.join(self.dir_cache, self.project_name, self.json_cache)
-            map_path = HandleJson(infile).read_json()
+            map_path = HandleJson(infile).to_dict()
             if map_path:
                 self.map_path = map_path
             else:
@@ -56,17 +56,17 @@ class Parse(Commons):
   
     def parse_term(self, key2:str):
         if self.key1 is None:
-            print(f"Please run the method specify_gene_identifer(<gene identifier>) firstly.")
+            print(f"Please run the method parse_column() firstly.")
+            return False
         res = self.map_path[self.key1].get(key2)
-        if len(res) == 1:
+        if res:
             self.key2 = key2
             print(f"OK! {key2} is specified. The next,  parse terms using the method parse()...")
-        elif res == []:
+            return True
+        else:
             print(f"Error: No such a term is detected.")
             print(f"You might as well use search_term(<term>) to get a correct term.")
-        else:
-            print(f"Error: Mutliple terms are detected. {res}")
-            print(f"You might as well specify one of them.")
+        return False
     
     def add_parsing(self):
         def _func(x, map):
@@ -78,9 +78,9 @@ class Parse(Commons):
                 return map[x]
             return ''
         if self.key1 and self.key2:
-            map = MapCache(self.key1, self.key2).get_map()
+            map = MapCache(self.project_name, self.key1, self.key2).get_map()
             self.df[self.key2] = self.df[self.column_name].apply(
-                lambda x: _func(x, map))
+                lambda x: _func(str(x), map))
 
     
 

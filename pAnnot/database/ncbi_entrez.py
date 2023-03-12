@@ -9,8 +9,6 @@ from Bio import Entrez
 # Entrez.api_key = "MyAPIkey"
 Entrez.email = "tiezhengyuan@hotmail.com"
 
-from pAnnot.connector.http import HTTP
-from pAnnot.utils.threading import Threading
 from pAnnot.utils.commons import Commons
 
 

@@ -55,12 +55,10 @@ class ProcessGene(Commons):
 
         # decorate some data format
         tmp_outfile = self.file_db + f".{next(counter)}"
-        print(tmp_infile, tmp_outfile)
         self.format_gene(tmp_infile, tmp_outfile)
         tmp_infile = tmp_outfile
         # parse uniprotkb
         tmp_outfile = self.file_db + f".{next(counter)}"
-        print(tmp_infile, tmp_outfile)
         tmp_outfile = self.parse_uniprotkb(tmp_infile, tmp_outfile)
         os.rename(tmp_outfile, self.file_db)
         del counter
@@ -81,7 +79,6 @@ class ProcessGene(Commons):
             header = next(f).rstrip()
             if header.startswith('#'): header = header[1:]
             col_names = header.split('\t')
-            # print(col_names)
             for line in f:
                 items = line.rstrip().split('\t')
                 this_tax_id, geneid = items[0], items[1]
@@ -263,5 +260,4 @@ class ProcessGene(Commons):
     def get_fields(self):
         handle = Jtxt(self.file_db).read_jtxt()
         record = next(handle)
-        self.print_dict(record)
         del handle

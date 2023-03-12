@@ -3,9 +3,9 @@
 create map of references ~ <other annotation terms>
 """
 import sys
-from utils.commons import Commons
-from parser.check import Check
-from parser.map_annot import MapAnnot
+from pAnnot.utils.commons import Commons
+from pAnnot.parser.check import Check
+from pAnnot.parser.map_annot import MapAnnot
 
 class App(Commons):
     def __init__(self, project_name:str, ref_term:str):
@@ -23,7 +23,6 @@ class App(Commons):
             sys.exit(1)
 
         #do mapping
-        # print(self.project_name, self.ref_term)
         c = MapAnnot(self.project_name)
         if self.ref_term == 'GeneID':
             c.map_entrez(['GeneID',])

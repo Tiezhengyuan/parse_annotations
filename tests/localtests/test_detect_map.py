@@ -2,7 +2,7 @@
 Test class DetectMap
 '''
 from tests.helper import *
-from parser.detect_map import DetectMap
+from pAnnot.parser.detect_map import DetectMap
 
 @ddt
 class TestUtils(TestCase):

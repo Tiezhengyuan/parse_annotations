@@ -5,8 +5,8 @@ jtxt format could hanlde huge data up to ~GB due RAM limits
 from typing import Iterable
 import json
 import os
-from utils.utils import Utils
-from utils.commons import Commons
+from pAnnot.utils.utils import Utils
+from pAnnot.utils.commons import Commons
 
 class Jtxt(Commons):
     def __init__(self, file:str):
@@ -30,10 +30,11 @@ class Jtxt(Commons):
         '''
         return one line one dict
         '''
-        with open(self.file, 'rt') as f:
-            for line in f:
-                records = json.loads(line)
-                yield records
+        if os.path.isfile(self.file):
+            with open(self.file, 'rt') as f:
+                for line in f:
+                    records = json.loads(line)
+                    yield records
 
     def save_jtxt(self, input:dict, is_oneline=False):
         '''

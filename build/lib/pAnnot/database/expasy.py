@@ -5,10 +5,10 @@ import os
 from typing import Iterable
 from Bio.ExPASy import Enzyme
 
-from utils.commons import Commons
-from utils.file import File
-from utils.utils import Utils
-from utils.handle_json import HandleJson
+from pAnnot.utils.commons import Commons
+from pAnnot.utils.file import File
+from pAnnot.utils.utils import Utils
+from pAnnot.utils.handle_json import HandleJson
 
 
 class ExPASy(Commons):

@@ -8,7 +8,7 @@ import os
 import time
 from typing import Callable
 import ftplib
-from utils.dir import Dir
+from pAnnot.utils.dir import Dir
 
 class ConnectFTP2:
     dir_download = os.environ.get('DIR_DOWNLOAD', '')

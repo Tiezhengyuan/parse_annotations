@@ -2,7 +2,7 @@
 Test class 
 '''
 from tests.helper import *
-from database.ncbi_entrez import NCBIEntrez
+from pAnnot.database.ncbi_entrez import NCBIEntrez
 
 
 @ddt

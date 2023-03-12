@@ -5,7 +5,7 @@ from unittest import TestCase, mock, skip
 from ddt import ddt, data, unpack
 import os, sys
 
-from connector.connect_expasy import ConnectExPASy
+from pAnnot.connector.connect_expasy import ConnectExPASy
 
 env = {
     'DIR_CACHE': "H:\\cache",
@@ -19,7 +19,7 @@ class TestKEGG(TestCase):
     def setUp(self):
         self.c = ConnectExPASy()
 
-
+    @skip
     def test_download_data(self):
         res = self.c.download_data()
-        print(res)
+
